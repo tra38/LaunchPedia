@@ -71,7 +71,7 @@ class LaunchInfo extends Component {
 
   render() {
     return (
-      <Media>
+      <Media className="Launch-info">
         <Media.Left align="top">
           <RocketImage imageURL={this.state.imageURL} imageSizes = {this.state.imageSizes} />
         </Media.Left>
@@ -85,8 +85,8 @@ class LaunchInfo extends Component {
 }
 
 const LaunchDiv = ({launchDetails}) => (
-  <Panel header={ launchHeader({launchDetails}) } eventKey={launchDetails.id}>
-    <LaunchInfo launchId={launchDetails.id} />
+  <Panel header={ launchHeader({launchDetails}) } eventKey={launchDetails.id} className="Launch-div">
+    <LaunchInfo launchId={launchDetails.id}/>
   </Panel>
 );
 
