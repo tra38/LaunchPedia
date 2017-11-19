@@ -20,6 +20,7 @@
 
 .App-intro {
   font-size: large;
+  float: both;
 }
 
 @keyframes App-logo-spin {
@@ -33,4 +34,8 @@
 
 .Launch-info {
   cursor: text;
+}
+
+.Launch-date-picker {
+  float: left;
 }
