@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import Panel from 'react-bootstrap/lib/Panel';
 import Accordion from 'react-bootstrap/lib/Accordion';
 import Media from 'react-bootstrap/lib/Media';
+import Pager from 'react-bootstrap/lib/Pager';
 import './App.css';
 import 'react-dates/initialize';
 import { DateRangePicker } from 'react-dates';
@@ -131,43 +132,73 @@ const LaunchDisplay = ({launches}) => {
 class App extends Component {
   constructor() {
     super();
-    this.state = { launches: [], startDate: null, endDate: null };
+    this.state = { launches: [], startDate: null, endDate: null, offset: 0, total: 0, count: 0 };
   }
 
   componentDidMount() {
-    this.queryData()
+    this.queryData();
+  }
+
+  fullLaunchURLTemplate(formattedStartDate, formattedEndDate, offset) {
+    return `https://launchlibrary.net/1.3/launch/${formattedStartDate}/${formattedEndDate}?offset=${offset}`
   }
 
   launchesURL() {
-    var startDate = this.state.startDate;
-    var endDate = this.state.endDate;
+    var startDate = this.state.startDate
+    var endDate = this.state.endDate
+    var offset = this.state.offset
     if (startDate == null && endDate == null) {
-      return "https://launchlibrary.net/1.3/launch/2017-11-19/2017-12-01"
+      return this.fullLaunchURLTemplate("2017-11-19", "2017-12-01", offset)
     } else if (endDate == null) {
       var formattedStartDate = startDate.format('YYYY-MM-DD')
-      return `https://launchlibrary.net/1.3/launch/${formattedStartDate}`
+      return `https://launchlibrary.net/1.3/launch/${formattedStartDate}?offset={offset}`
     } else {
       var formattedStartDate = startDate.format('YYYY-MM-DD')
       var formattedEndDate = endDate.format('YYYY-MM-DD')
-      return `https://launchlibrary.net/1.3/launch/${formattedStartDate}/${formattedEndDate}`
+      return this.fullLaunchURLTemplate(formattedStartDate, formattedEndDate, offset)
     }
   }
 
-
   queryData() {
     var url = this.launchesURL()
+    console.log(url)
     fetch(url).
       then(result =>
         result.json()
       )
-      .then(result => this.setState ({launches: result.launches }));
+      .then(result => this.setState ({launches: result.launches, offset: result.offset, total: result.total, count: result.count }));
   }
 
   updateParentDate = (object) => {
     var startDate = object.startDate
     var endDate = object.endDate
-    this.setState({ startDate: startDate, endDate: endDate });
+    this.setState({ startDate: startDate, endDate: endDate, offset: 0 });
     this.queryData();
+  }
+
+  goBackwards = () => {
+    var previousOffset = this.state.offset;
+    this.setState(
+      { offset: previousOffset - 10 },
+      this.queryData
+    )
+  }
+
+  goForward = () => {
+    var previousOffset = this.state.offset;
+    this.setState(
+      { offset: previousOffset + 10 },
+      this.queryData
+    )
+  }
+
+  checkIfNextIsDisabled() {
+    var launchesViewed = this.state.count + this.state.offset
+    return launchesViewed === this.state.total
+  }
+
+  checkIfPrevIsDisabled() {
+    return this.state.offset === 0
   }
 
   render() {
@@ -184,6 +215,10 @@ class App extends Component {
           <LaunchDatePicker updateParentDate={this.updateParentDate}/>
         </Panel>
         <p className="App-intro">
+          <Pager>
+            <Pager.Item previous disabled={this.checkIfPrevIsDisabled()} onSelect={ this.goBackwards }>&larr; Previous Page</Pager.Item>
+            <Pager.Item next disabled={this.checkIfNextIsDisabled()} onSelect={ this.goForward }>Next Page &rarr;</Pager.Item>
+          </Pager>
           <LaunchDisplay launches={this.state.launches} />
         </p>
       </div>
