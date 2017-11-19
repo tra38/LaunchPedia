@@ -27,7 +27,6 @@ class LaunchInfo extends Component {
 
   launchURL(launchId) {
     var url = `https://launchlibrary.net/1.2/launch/${launchId}`
-    console.log(url)
     return url
   }
 
