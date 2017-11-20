@@ -62,6 +62,7 @@ const FavoriteButton = observer(class FavoriteButton extends Component {
   toggleFavorite = () => {
     var launch = this.props.launch
     this.props.favoritesStore.toggleFavorite(launch)
+    this.props.triggerReload();
   }
 
   render() {
@@ -115,7 +116,8 @@ class LaunchInfo extends Component {
             <Media.Left align="bottom">
               <FavoriteButton
                 favoritesStore = {this.props.favoritesStore}
-                launch = { this.props.launch} />
+                launch = { this.props.launch}
+                triggerReload = { this.props.triggerReload} />
             </Media.Left>
         </Media.Body>
       </Media>
@@ -124,7 +126,7 @@ class LaunchInfo extends Component {
 
 }
 
-const LaunchDiv = ({launchDetails, favoritesStore}) => (
+const LaunchDiv = ({launchDetails, favoritesStore, triggerReload}) => (
   <Panel
     header={ LaunchHeader({launchDetails}) }
     eventKey={launchDetails.id}
@@ -136,7 +138,8 @@ const LaunchDiv = ({launchDetails, favoritesStore}) => (
       imageURL={launchDetails.rocket.imageURL}
       imageSizes={launchDetails.rocket.imageSizes}
       favoritesStore={favoritesStore}
-      launch={launchDetails}/>
+      launch={launchDetails}
+      triggerReload={triggerReload}/>
   </Panel>
 );
 
@@ -175,23 +178,24 @@ class LaunchDatePicker extends Component {
 
 }
 
-const LaunchDisplay = ({launches, favoritesStore}) => {
+const LaunchDisplay = ({launches, favoritesStore, triggerReload}) => {
   return (
     <Accordion>
       {launches.map(
         (launchDetails) =>
-          launchDivConstructor(launchDetails, favoritesStore)
+          launchDivConstructor(launchDetails, favoritesStore, triggerReload)
         )
       }
     </Accordion>
   );
 }
 
-const launchDivConstructor = (launchDetails, favoritesStore) => {
+const launchDivConstructor = (launchDetails, favoritesStore, triggerReload) => {
   return (
     LaunchDiv({
       launchDetails: launchDetails,
-      favoritesStore: favoritesStore
+      favoritesStore: favoritesStore,
+      triggerReload: triggerReload
     })
   );
 }
@@ -366,7 +370,8 @@ const App = observer(class App extends Component {
     return (
       <LaunchDisplay
         launches={launches}
-        favoritesStore={this.props.favoritesStore}/>
+        favoritesStore={this.props.favoritesStore}
+        triggerReload={this.triggerReload} />
     )
   }
 
@@ -380,6 +385,10 @@ const App = observer(class App extends Component {
 
   favoriteResultDisplay = () => {
     return this.launchDisplayConstructor(this.props.favoritesStore.favorites)
+  }
+
+  triggerReload = () => {
+    this.forceUpdate()
   }
 
   render() {
