@@ -19,9 +19,6 @@ import { DateRangePicker } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
 import * as moment from 'moment';
 
-// const defaultStartDate = moment().startOf('day').fromNow();
-
-// const defaultEndDate = moment().startOf('day').fromNow().add(10, 'days');
 const defaultStartDate = moment()
 const defaultEndDate = moment().add(15, 'days')
 
