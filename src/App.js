@@ -163,14 +163,11 @@ class SearchInput extends Component {
     } else {
       newSearchType = "Agency Abbrevation"
     }
-    console.log(newSearchType)
 
     this.setState( {searchType: newSearchType}, this.refreshSearch)
   }
 
   refreshSearch = () => {
-    console.log("SEARCH REFRESH")
-    console.log(this.state.searchType)
     this.doSearch(this.state.value, this.launchData)
   }
 
@@ -319,7 +316,6 @@ class App extends Component {
   }
 
   launchesToDisplay = () => {
-    console.log(this.state)
     if (this.state.filtered === true) {
       return (<LaunchDisplay launches={this.state.searchResults} />)
     } else {
