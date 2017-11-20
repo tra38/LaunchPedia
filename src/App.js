@@ -367,12 +367,16 @@ const App = observer(class App extends Component {
   }
 
   launchDisplayConstructor = (launches) => {
-    return (
-      <LaunchDisplay
-        launches={launches}
-        favoritesStore={this.props.favoritesStore}
-        triggerReload={this.triggerReload} />
-    )
+    if (launches.length === 0) {
+      return (<span>No results.</span>)
+    } else {
+      return (
+        <LaunchDisplay
+          launches={launches}
+          favoritesStore={this.props.favoritesStore}
+          triggerReload={this.triggerReload} />
+      )
+    }
   }
 
   searchResultDisplay = () => {
