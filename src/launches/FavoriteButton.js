@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Glyphicon } from "../dependencies/react-bootstrap-dependencies"
-import {observer} from "mobx-react";
 
-const FavoriteButton = observer(class FavoriteButton extends Component {
+class FavoriteButton extends Component {
   favoritesMessage() {
     var launch = this.props.launch;
     var isFavorite = this.props.favoritesStore.hasFavorite(launch);
@@ -24,6 +23,6 @@ const FavoriteButton = observer(class FavoriteButton extends Component {
       </Button>
     );
   }
-});
+};
 
 export default FavoriteButton;

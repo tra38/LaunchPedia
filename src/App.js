@@ -7,9 +7,7 @@ import { SearchPanel} from "./search/all"
 import { LoadingScreen } from "./utils/all"
 import { defaultStartDate, defaultEndDate } from "./defaults/all"
 
-import {observer} from "mobx-react";
-
-const App = observer(class App extends Component {
+class App extends Component {
   constructor() {
     super();
     this.state = { launches: [], startDate: defaultStartDate, endDate: defaultEndDate, filtered: false, searchResults: [], favoriteLaunches: [], loading: false };
@@ -165,6 +163,6 @@ const App = observer(class App extends Component {
       </div>
     );
   }
-});
+};
 
 export default App;
