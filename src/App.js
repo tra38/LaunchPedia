@@ -54,15 +54,14 @@ const FavoriteButton = observer(class FavoriteButton extends Component {
   }
 
   favoritesMessage() {
-    var launchId = this.props.launchId;
-    var isFavorite = this.props.favoritesStore.hasFavorite(launchId);
+    var launch = this.props.launch;
+    var isFavorite = this.props.favoritesStore.hasFavorite(launch);
     return isFavorite ? "Unstar" : "Star";
   }
 
   toggleFavorite = () => {
-    var launchId = this.props.launchId
-    this.props.favoritesStore.toggleFavorite(launchId)
-    console.log(this.props.favoritesStore.favorites.length)
+    var launch = this.props.launch
+    this.props.favoritesStore.toggleFavorite(launch)
   }
 
   render() {
@@ -116,7 +115,7 @@ class LaunchInfo extends Component {
             <Media.Left align="bottom">
               <FavoriteButton
                 favoritesStore = {this.props.favoritesStore}
-                launchId = { this.props.launchId} />
+                launch = { this.props.launch} />
             </Media.Left>
         </Media.Body>
       </Media>
@@ -137,7 +136,7 @@ const LaunchDiv = ({launchDetails, favoritesStore}) => (
       imageURL={launchDetails.rocket.imageURL}
       imageSizes={launchDetails.rocket.imageSizes}
       favoritesStore={favoritesStore}
-      launchId={launchDetails.id}/>
+      launch={launchDetails}/>
   </Panel>
 );
 
@@ -367,8 +366,7 @@ const App = observer(class App extends Component {
     return (
       <LaunchDisplay
         launches={launches}
-        favoritesStore={this.props.favoritesStore}
-        favoriteResultsUpdate = {this.favoriteResultsUpdate}/>
+        favoritesStore={this.props.favoritesStore}/>
     )
   }
 
@@ -381,25 +379,7 @@ const App = observer(class App extends Component {
   }
 
   favoriteResultDisplay = () => {
-    this.favoriteResultsUpdate()
-    return this.launchDisplayConstructor(this.state.favoriteLaunches)
-  }
-
-  favoriteResultsUpdate = () => {
-    var store = this.props.favoritesStore
-    var favoriteIds = store.favorites;
-
-    return Promise.all(favoriteIds.map(id =>
-      fetch(`https://launchlibrary.net/1.3/launch/${id}`)
-      .then(result =>
-        result.json()
-      )
-      .then(result =>
-        result.launches[0]
-      )
-    )).then(favoriteLaunches =>
-      this.setState({favoriteLaunches: favoriteLaunches})
-    )
+    return this.launchDisplayConstructor(this.props.favoritesStore.favorites)
   }
 
   render() {

@@ -10,26 +10,30 @@ class FavoritesStore {
     );
   }
 
-  hasFavorite(id) {
-    var index = this.favorites.indexOf(id);
+  findIndex(id) {
+    return this.favorites.findIndex(launch => launch.id === id);
+  }
+
+  hasFavorite(launch) {
+    var index = this.findIndex(launch.id);
     return (index > -1);
   }
 
-  toggleFavorite(id) {
-    var alreadyFavorited = this.hasFavorite(id)
+  toggleFavorite(launch) {
+    var alreadyFavorited = this.hasFavorite(launch)
     if (alreadyFavorited) {
-      this.removeFavorite(id)
+      this.removeFavorite(launch)
     } else {
-      this.addFavorite(id)
+      this.addFavorite(launch)
     }
   }
 
-  addFavorite(id) {
-    this.favorites.push(id);
+  addFavorite(launch) {
+    this.favorites.push(launch);
   }
 
-  removeFavorite(id) {
-    var index = this.favorites.indexOf(id);
+  removeFavorite(launch) {
+    var index = this.findIndex(launch.id);
     if (index > -1) {
       this.favorites.splice(index, 1);
     }
