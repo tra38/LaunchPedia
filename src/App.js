@@ -1,13 +1,29 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
+
 import Panel from 'react-bootstrap/lib/Panel';
 import Accordion from 'react-bootstrap/lib/Accordion';
 import Media from 'react-bootstrap/lib/Media';
-import Pager from 'react-bootstrap/lib/Pager';
+import Form from 'react-bootstrap/lib/Form';
+import FormGroup from 'react-bootstrap/lib/FormGroup';
+import FormControl from 'react-bootstrap/lib/FormControl';
+import InputGroup from 'react-bootstrap/lib/InputGroup';
+import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
+import ToggleButton from 'react-bootstrap/lib/ToggleButton';
+import ToggleButtonGroup from 'react-bootstrap/lib/ToggleButton';
+import DropdownButton from 'react-bootstrap/lib/DropdownButton';
+import MenuItem from 'react-bootstrap/lib/MenuItem';
 import './App.css';
 import 'react-dates/initialize';
 import { DateRangePicker } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
+import * as moment from 'moment';
+
+// const defaultStartDate = moment().startOf('day').fromNow();
+
+// const defaultEndDate = moment().startOf('day').fromNow().add(10, 'days');
+const defaultStartDate = moment()
+const defaultEndDate = moment().add(15, 'days')
 
 const LaunchHeader = ({launchDetails}) => (
   <strong>
@@ -90,7 +106,11 @@ const LaunchDiv = ({launchDetails}) => (
 class LaunchDatePicker extends Component {
   constructor() {
     super();
-    this.state = { startDate: null, endDate: null, focusedInput: null }
+    this.state = {
+      startDate: defaultStartDate,
+      endDate: defaultEndDate,
+      focusedInput: null
+    }
   }
 
   updateDates = (startDate, endDate) => {
@@ -129,10 +149,96 @@ const LaunchDisplay = ({launches}) => {
   );
 }
 
+class SearchInput extends Component {
+
+  constructor() {
+      super();
+      this.state = { searchType: "Country Code", value: "" }
+  }
+
+  updateSearchType = (value) => {
+    var newSearchType;
+    if (value === "1") {
+      newSearchType = "Country Code"
+    } else {
+      newSearchType = "Agency Abbrevation"
+    }
+    console.log(newSearchType)
+
+    this.setState( {searchType: newSearchType}, this.refreshSearch)
+  }
+
+  refreshSearch = () => {
+    console.log("SEARCH REFRESH")
+    console.log(this.state.searchType)
+    this.doSearch(this.state.value, this.launchData)
+  }
+
+  agencyAbbrevations = (agencies) => {
+    var array = []
+    agencies.forEach((agency) => {
+      array.push(agency.abbrev)
+    })
+    return array.join(" ")
+  }
+
+  launchData = (launch) => {
+    if (this.state.searchType == "Country Code") {
+      return launch.location.countryCode.toLowerCase()
+    } else {
+      return this.agencyAbbrevations(launch.rocket.agencies).toLowerCase()
+    }
+  }
+
+  handleChange = (queryText, launchData) => {
+    this.setState({value: queryText}, this.doSearch(queryText, launchData))
+  }
+
+  doSearch = (queryText, launchData) => {
+    var searchResults =[];
+    this.props.launches.forEach(function(launch){
+      if(launchData(launch).indexOf(queryText.toLowerCase())!=-1)
+        searchResults.push(launch);
+    });
+    this.props.updateSearchResults({queryText: queryText, searchResults: searchResults})
+  }
+
+  render() {
+    return (
+      <Form inline>
+        <FormGroup className="Launch-search">
+          <InputGroup>
+            <DropdownButton
+              componentClass={InputGroup.Button}
+              id="input-dropdown-addon"
+              title={this.state.searchType}>
+                <MenuItem
+                  key="1"
+                  onSelect = { () => this.updateSearchType("1") }>
+                    Country Code
+                </MenuItem>
+                <MenuItem
+                  key="2"
+                  onSelect = { () => this.updateSearchType("2") }>
+                    Agency Abbrevation
+                </MenuItem>
+              </DropdownButton>
+            <FormControl
+              type="text"
+              value={this.state.value}
+              placeholder="Search"
+              onChange={(event) => this.handleChange(event.target.value, this.launchData)} />
+            </InputGroup>
+        </FormGroup>
+      </Form>
+    );
+  }
+}
+
 class App extends Component {
   constructor() {
     super();
-    this.state = { launches: [], startDate: null, endDate: null, offset: 0, total: 0, count: 0 };
+    this.state = { launches: [], startDate: defaultStartDate, endDate: defaultEndDate, filtered: false, searchResults: [] };
   }
 
   componentDidMount() {
@@ -143,12 +249,13 @@ class App extends Component {
     return `https://launchlibrary.net/1.3/launch/${formattedStartDate}/${formattedEndDate}?offset=${offset}`
   }
 
-  launchesURL() {
+  launchesURL(offset) {
     var startDate = this.state.startDate
     var endDate = this.state.endDate
-    var offset = this.state.offset
     if (startDate == null && endDate == null) {
-      return this.fullLaunchURLTemplate("2017-11-19", "2017-12-01", offset)
+      var formattedStartDate = defaultStartDate.format('YYYY-MM-DD')
+      var formattedEndDate = defaultEndDate.format('YYYY-MM-DD')
+      return this.fullLaunchURLTemplate(formattedStartDate, formattedEndDate, offset)
     } else if (endDate == null) {
       var formattedStartDate = startDate.format('YYYY-MM-DD')
       return `https://launchlibrary.net/1.3/launch/${formattedStartDate}?offset={offset}`
@@ -160,45 +267,64 @@ class App extends Component {
   }
 
   queryData() {
-    var url = this.launchesURL()
-    console.log(url)
-    fetch(url).
-      then(result =>
+    var array = []
+    var offset = 0
+    var initialUrl = this.launchesURL(0)
+
+    this.accessData(initialUrl, array)
+  }
+
+  accessData(url, arrayOfData) {
+    fetch(url)
+      .then(result =>
         result.json()
       )
-      .then(result => this.setState ({launches: result.launches, offset: result.offset, total: result.total, count: result.count }));
+      .then(data =>
+        this.processData(data, arrayOfData)
+      )
+  }
+
+  processData(data, arrayOfData) {
+    var newArray = arrayOfData.concat(data.launches)
+
+    var launchesViewed = data.count + data.offset
+    var total = data.total
+
+    if (launchesViewed < total) {
+      var newOffset = data.offset + 10
+      var newUrl = this.launchesURL(newOffset)
+      this.accessData(newUrl, newArray)
+    } else {
+      this.setState({launches : newArray})
+    }
   }
 
   updateParentDate = (object) => {
     var startDate = object.startDate
     var endDate = object.endDate
-    this.setState({ startDate: startDate, endDate: endDate, offset: 0 });
+    this.setState({ startDate: startDate, endDate: endDate });
     this.queryData();
   }
 
-  goBackwards = () => {
-    var previousOffset = this.state.offset;
-    this.setState(
-      { offset: previousOffset - 10 },
-      this.queryData
-    )
+  updateSearchResults = (object) => {
+    if (object.queryText === '') {
+      this.setState({
+        searchResults: object.searchResults,
+        filtered: false })
+    } else {
+      this.setState({
+        searchResults: object.searchResults,
+        filtered: true })
+    }
   }
 
-  goForward = () => {
-    var previousOffset = this.state.offset;
-    this.setState(
-      { offset: previousOffset + 10 },
-      this.queryData
-    )
-  }
-
-  checkIfNextIsDisabled() {
-    var launchesViewed = this.state.count + this.state.offset
-    return launchesViewed === this.state.total
-  }
-
-  checkIfPrevIsDisabled() {
-    return this.state.offset === 0
+  launchesToDisplay = () => {
+    console.log(this.state)
+    if (this.state.filtered === true) {
+      return (<LaunchDisplay launches={this.state.searchResults} />)
+    } else {
+      return (<LaunchDisplay launches={this.state.launches} />)
+    }
   }
 
   render() {
@@ -213,13 +339,12 @@ class App extends Component {
         </p>
         <Panel>
           <LaunchDatePicker updateParentDate={this.updateParentDate}/>
+          <SearchInput
+            launches={this.state.launches}
+            updateSearchResults={this.updateSearchResults}/>
         </Panel>
         <p className="App-intro">
-          <Pager>
-            <Pager.Item previous disabled={this.checkIfPrevIsDisabled()} onSelect={ this.goBackwards }>&larr; Previous Page</Pager.Item>
-            <Pager.Item next disabled={this.checkIfNextIsDisabled()} onSelect={ this.goForward }>Next Page &rarr;</Pager.Item>
-          </Pager>
-          <LaunchDisplay launches={this.state.launches} />
+          { this.launchesToDisplay() }
         </p>
       </div>
     );
