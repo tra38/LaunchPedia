@@ -8,16 +8,20 @@ import Form from 'react-bootstrap/lib/Form';
 import FormGroup from 'react-bootstrap/lib/FormGroup';
 import FormControl from 'react-bootstrap/lib/FormControl';
 import InputGroup from 'react-bootstrap/lib/InputGroup';
-import ButtonToolbar from 'react-bootstrap/lib/ButtonToolbar';
 import ToggleButton from 'react-bootstrap/lib/ToggleButton';
 import ToggleButtonGroup from 'react-bootstrap/lib/ToggleButton';
 import DropdownButton from 'react-bootstrap/lib/DropdownButton';
+import Button from 'react-bootstrap/lib/Button';
+import Glyphicon from 'react-bootstrap/lib/Glyphicon';
 import MenuItem from 'react-bootstrap/lib/MenuItem';
+import Tabs from 'react-bootstrap/lib/Tabs'
+import Tab from 'react-bootstrap/lib/Tab'
 import './App.css';
 import 'react-dates/initialize';
 import { DateRangePicker } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
 import * as moment from 'moment';
+import {observer} from "mobx-react";
 
 const defaultStartDate = moment()
 const defaultEndDate = moment().add(15, 'days')
@@ -38,9 +42,39 @@ const RocketImage = ({imageURL, imageSizes}) => {
 
 const LaunchTemplate = ({rocketName, locationName, numberOfAgencies, agencyNames}) => {
   return (
-      <p>{rocketName} is being prepared for launch at {locationName}. This rocket is controlled by {numberOfAgencies} {agencyNames}.</p>
+    <div>
+      {rocketName} is being prepared for launch at {locationName}. This rocket is controlled by {numberOfAgencies} {agencyNames}.
+    </div>
   );
 }
+
+const FavoriteButton = observer(class FavoriteButton extends Component {
+  constructor() {
+    super();
+  }
+
+  favoritesMessage() {
+    var launchId = this.props.launchId;
+    var isFavorite = this.props.favoritesStore.hasFavorite(launchId);
+    return isFavorite ? "Unstar" : "Star";
+  }
+
+  toggleFavorite = () => {
+    var launchId = this.props.launchId
+    this.props.favoritesStore.toggleFavorite(launchId)
+    console.log(this.props.favoritesStore.favorites.length)
+  }
+
+  render() {
+    return (
+      <Button onClick = {this.toggleFavorite} >
+        <Glyphicon glyph="star" />
+        {" "}
+        {this.favoritesMessage()}
+      </Button>
+    );
+  }
+});
 
 class LaunchInfo extends Component {
   constructor() {
@@ -79,6 +113,11 @@ class LaunchInfo extends Component {
             locationName = {this.props.locationName}
             numberOfAgencies = {this.numberOfAgencies(this.props.agencies)}
             agencyNames = {this.agencyNames(this.props.agencies)} />
+            <Media.Left align="bottom">
+              <FavoriteButton
+                favoritesStore = {this.props.favoritesStore}
+                launchId = { this.props.launchId} />
+            </Media.Left>
         </Media.Body>
       </Media>
     );
@@ -86,7 +125,7 @@ class LaunchInfo extends Component {
 
 }
 
-const LaunchDiv = ({launchDetails}) => (
+const LaunchDiv = ({launchDetails, favoritesStore}) => (
   <Panel
     header={ LaunchHeader({launchDetails}) }
     eventKey={launchDetails.id}
@@ -96,7 +135,9 @@ const LaunchDiv = ({launchDetails}) => (
       locationName={launchDetails.location.name}
       agencies={launchDetails.rocket.agencies}
       imageURL={launchDetails.rocket.imageURL}
-      imageSizes={launchDetails.rocket.imageSizes} />
+      imageSizes={launchDetails.rocket.imageSizes}
+      favoritesStore={favoritesStore}
+      launchId={launchDetails.id}/>
   </Panel>
 );
 
@@ -135,14 +176,24 @@ class LaunchDatePicker extends Component {
 
 }
 
-const LaunchDisplay = ({launches}) => {
+const LaunchDisplay = ({launches, favoritesStore}) => {
   return (
     <Accordion>
-        {launches.map(
-          (launchDetails) =>
-            LaunchDiv({ launchDetails })
-        )}
+      {launches.map(
+        (launchDetails) =>
+          launchDivConstructor(launchDetails, favoritesStore)
+        )
+      }
     </Accordion>
+  );
+}
+
+const launchDivConstructor = (launchDetails, favoritesStore) => {
+  return (
+    LaunchDiv({
+      launchDetails: launchDetails,
+      favoritesStore: favoritesStore
+    })
   );
 }
 
@@ -229,10 +280,10 @@ class SearchInput extends Component {
   }
 }
 
-class App extends Component {
+const App = observer(class App extends Component {
   constructor() {
     super();
-    this.state = { launches: [], startDate: defaultStartDate, endDate: defaultEndDate, filtered: false, searchResults: [] };
+    this.state = { launches: [], startDate: defaultStartDate, endDate: defaultEndDate, filtered: false, searchResults: [], favoriteLaunches: [] };
   }
 
   componentDidMount() {
@@ -312,12 +363,43 @@ class App extends Component {
     }
   }
 
-  launchesToDisplay = () => {
+  launchDisplayConstructor = (launches) => {
+    return (
+      <LaunchDisplay
+        launches={launches}
+        favoritesStore={this.props.favoritesStore}
+        favoriteResultsUpdate = {this.favoriteResultsUpdate}/>
+    )
+  }
+
+  searchResultDisplay = () => {
     if (this.state.filtered === true) {
-      return (<LaunchDisplay launches={this.state.searchResults} />)
+      return this.launchDisplayConstructor(this.state.searchResults)
     } else {
-      return (<LaunchDisplay launches={this.state.launches} />)
+      return this.launchDisplayConstructor(this.state.launches)
     }
+  }
+
+  favoriteResultDisplay = () => {
+    this.favoriteResultsUpdate()
+    return this.launchDisplayConstructor(this.state.favoriteLaunches)
+  }
+
+  favoriteResultsUpdate = () => {
+    var store = this.props.favoritesStore
+    var favoriteIds = store.favorites;
+
+    return Promise.all(favoriteIds.map(id =>
+      fetch(`https://launchlibrary.net/1.3/launch/${id}`)
+      .then(result =>
+        result.json()
+      )
+      .then(result =>
+        result.launches[0]
+      )
+    )).then(favoriteLaunches =>
+      this.setState({favoriteLaunches: favoriteLaunches})
+    )
   }
 
   render() {
@@ -330,18 +412,23 @@ class App extends Component {
         <p className="App-intro">
           To get started, edit <code>src/App.js</code> and save to reload.
         </p>
-        <Panel>
-          <LaunchDatePicker updateParentDate={this.updateParentDate}/>
-          <SearchInput
-            launches={this.state.launches}
-            updateSearchResults={this.updateSearchResults}/>
-        </Panel>
-        <p className="App-intro">
-          { this.launchesToDisplay() }
-        </p>
+        <Tabs defaultActiveKey={1}>
+          <Tab eventKey={1} title="Search">
+            <Panel>
+              <LaunchDatePicker updateParentDate={this.updateParentDate}/>
+              <SearchInput
+                launches={this.state.launches}
+                updateSearchResults={this.updateSearchResults} />
+            </Panel>
+            { this.searchResultDisplay() }
+          </Tab>
+          <Tab eventKey={2} title="Favorites">
+            { this.favoriteResultDisplay() }
+          </Tab>
+        </Tabs>
       </div>
     );
   }
-}
+});
 
 export default App;
