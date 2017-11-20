@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import FavoritesStore from './favoritesStore.js'
+import FavoritesStore from './stores/all'
 
 // css files
 import './App.css';
