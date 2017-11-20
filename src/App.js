@@ -286,7 +286,7 @@ class SearchInput extends Component {
 const App = observer(class App extends Component {
   constructor() {
     super();
-    this.state = { launches: [], startDate: defaultStartDate, endDate: defaultEndDate, filtered: false, searchResults: [], favoriteLaunches: [] };
+    this.state = { launches: [], startDate: defaultStartDate, endDate: defaultEndDate, filtered: false, searchResults: [], favoriteLaunches: [], loading: false };
   }
 
   componentDidMount() {
@@ -315,6 +315,7 @@ const App = observer(class App extends Component {
   }
 
   queryData() {
+    this.setState({loading: true})
     var array = []
     var offset = 0
     var initialUrl = this.launchesURL(0)
@@ -343,7 +344,7 @@ const App = observer(class App extends Component {
       var newUrl = this.launchesURL(newOffset)
       this.accessData(newUrl, newArray)
     } else {
-      this.setState({launches : newArray})
+      this.setState({launches : newArray, loading: false})
     }
   }
 
@@ -379,8 +380,19 @@ const App = observer(class App extends Component {
     }
   }
 
+  loadingScreen = () => {
+    return (<div>
+        <img src={logo} className="App-logo" alt="logo" />
+        Loading
+      </div>)
+  }
+
   searchResultDisplay = () => {
-    if (this.state.filtered === true) {
+    if (this.state.loading === true) {
+      return(this.loadingScreen())
+      return (<div className="App-logo">Loading...</div>)
+    }
+    else if (this.state.filtered === true) {
       return this.launchDisplayConstructor(this.state.searchResults)
     } else {
       return this.launchDisplayConstructor(this.state.launches)
@@ -399,7 +411,6 @@ const App = observer(class App extends Component {
     return (
       <div className="App">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to SUPER-React</h1>
         </header>
         <p className="App-intro">
