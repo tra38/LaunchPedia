@@ -154,7 +154,7 @@ class App extends Component {
           </Tab>
           <Tab eventKey={2} title="Favorites">
             <Panel>
-              Your favorites are stored here. To add or remove a favorite, simply click on the <Glyphicon glyph="star" /> button on the Search page.
+              Your favorites are stored here. To add or remove a favorite, simply click on the <Glyphicon glyph="star" /> button.
             </Panel>
 
             { this.favoriteResultDisplay() }
