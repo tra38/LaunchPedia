@@ -325,12 +325,23 @@ const App = observer(class App extends Component {
 
   accessData(url, arrayOfData) {
     fetch(url)
-      .then(result =>
-        result.json()
-      )
-      .then(data =>
+      .then(result => {
+        if (result.ok) {
+          return result.json()
+        } else {
+          console.log(result)
+          var errorMessage = `Response Failed. Status Code - ${result.status}. Error Message - ${result.statusText}`
+
+          throw new Error(errorMessage)
+        }
+      })
+      .then(data => {
         this.processData(data, arrayOfData)
-      )
+      })
+      .catch(error => {
+        console.log(error)
+        this.errorHandler(error, arrayOfData)
+      })
   }
 
   processData(data, arrayOfData) {
@@ -348,11 +359,17 @@ const App = observer(class App extends Component {
     }
   }
 
+  errorHandler(error, arrayOfData) {
+    this.setState({launches : arrayOfData, loading: false})
+  }
+
   updateParentDate = (object) => {
     var startDate = object.startDate
     var endDate = object.endDate
-    this.setState({ startDate: startDate, endDate: endDate });
-    this.queryData();
+    this.setState(
+      { startDate: startDate, endDate: endDate },
+      this.queryData
+    );
   }
 
   updateSearchResults = (object) => {
