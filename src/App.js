@@ -427,12 +427,6 @@ const App = observer(class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <h1 className="App-title">Welcome to SUPER-React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
         <Tabs defaultActiveKey={1}>
           <Tab eventKey={1} title="Search">
             <Panel>
@@ -444,6 +438,10 @@ const App = observer(class App extends Component {
             { this.searchResultDisplay() }
           </Tab>
           <Tab eventKey={2} title="Favorites">
+            <Panel>
+              Your favorites are stored here. To add a favorite, simply click on the <Glyphicon glyph="star" /> button on the Search page.
+            </Panel>
+
             { this.favoriteResultDisplay() }
           </Tab>
         </Tabs>
