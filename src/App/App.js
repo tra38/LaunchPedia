@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 
-import { Tabs, Tab, Panel, Glyphicon } from './dependencies/react-bootstrap-dependencies';
+import { Tabs, Tab, Panel, Glyphicon } from '../dependencies/react-bootstrap-dependencies';
 
-import { LaunchDisplay } from './launches/all'
-import { SearchPanel} from "./search/all"
-import { LoadingScreen } from "./utils/all"
-import { defaultStartDate, defaultEndDate } from "./defaults/all"
+import { LaunchDisplay } from '../launches/all'
+import { SearchPanel} from "../search/all"
+import { LoadingScreen } from "../utils/all"
+import { defaultStartDate, defaultEndDate } from "../defaults/all"
 
 class App extends Component {
   constructor() {
