@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import FavoritesStore from './stores/all'
+import { FavoritesStore } from './stores/all'
 
 // css files
 import './index.css';
