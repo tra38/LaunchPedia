@@ -56,7 +56,7 @@ const FavoriteButton = observer(class FavoriteButton extends Component {
   favoritesMessage() {
     var launch = this.props.launch;
     var isFavorite = this.props.favoritesStore.hasFavorite(launch);
-    return isFavorite ? "Unstar" : "Star";
+    return isFavorite ? "Remove from Favorites" : "Add to Favorites";
   }
 
   toggleFavorite = () => {
