@@ -23,7 +23,7 @@ npm start
 - ```css``` contains the custom css that we use to style the webapp.
 - ```defaults``` contains the constants that we use for the application. Right now, we only have two - the default Start Date and the default End Date.
 - ```dependencies``` store references to the two external dependencies were rely on heavily: ```react-bootstrap``` and ```react-date```. We refer to this folder when some of our components need components from these two dependencies.
-- ````launches``` contain all components used for displaying Launches. All components in ```launches``` are stateless, and are dependent on props passed in from external components.
+- ```launches``` contain all components used for displaying Launches. All components in ```launches``` are stateless, and are dependent on props passed in from external components.
 - ```search``` contains all components used for searching. There are two stateful components (```SearchInput``` and ```LaunchDatePicker```) and a stateless component (```SearchPanel```) used to render the two stateful components.
 - ```stores``` contains all components used for storing data. Right now, we only have one store (```FavoritesStore```), and we are using "mobx" to handle our state.
 - ```utils``` contains misc. files. For now, we only have a Loading Screen that we use when users are searching for dates.
