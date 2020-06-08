@@ -40,3 +40,7 @@
 .Launch-search {
   float: right;
 }
+
+.fade.in {
+  opacity: 1;
+}
