@@ -4,6 +4,11 @@ import { LaunchTemplate, RocketImage, FavoriteButton } from "./all.js"
 
 class LaunchInfo extends Component {
   numberOfAgencies(agencies) {
+    console.log(agencies);
+    if ( agencies == null )
+    {
+      return ""
+    }
     if (agencies.length > 1) {
       return agencies.length + " agencies:"
     }
@@ -14,6 +19,10 @@ class LaunchInfo extends Component {
 
   agencyNames(agencies) {
     var array = []
+    if ( agencies == null )
+    {
+      return ""
+    }
     agencies.forEach((agency) => {
       array.push(agency.name)
     })
