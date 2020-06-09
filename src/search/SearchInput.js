@@ -25,9 +25,19 @@ class SearchInput extends Component {
 
   agencyAbbrevations = (agencies) => {
     var array = []
-    agencies.forEach((agency) => {
-      array.push(agency.abbrev)
-    })
+    if ( agencies != null )
+    {
+      agencies.forEach((agency) => {
+        if ( agency == null )
+        {
+          array.push("");
+        }
+        else
+        {
+          array.push(agency.abbrev)
+        }
+      })
+    }
     return array.join(" ")
   }
 
