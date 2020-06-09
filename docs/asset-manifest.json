@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/LaunchPedia/static/css/main.e8eb0f68.chunk.css",
+    "main.js": "/LaunchPedia/static/js/main.d58fbc69.chunk.js",
+    "main.js.map": "/LaunchPedia/static/js/main.d58fbc69.chunk.js.map",
+    "runtime-main.js": "/LaunchPedia/static/js/runtime-main.828780c0.js",
+    "runtime-main.js.map": "/LaunchPedia/static/js/runtime-main.828780c0.js.map",
+    "static/css/2.8893375b.chunk.css": "/LaunchPedia/static/css/2.8893375b.chunk.css",
+    "static/js/2.3aacf11f.chunk.js": "/LaunchPedia/static/js/2.3aacf11f.chunk.js",
+    "static/js/2.3aacf11f.chunk.js.map": "/LaunchPedia/static/js/2.3aacf11f.chunk.js.map",
+    "index.html": "/LaunchPedia/index.html",
+    "precache-manifest.2f54763f651ba390ba6adc50870d8f42.js": "/LaunchPedia/precache-manifest.2f54763f651ba390ba6adc50870d8f42.js",
+    "service-worker.js": "/LaunchPedia/service-worker.js",
+    "static/css/2.8893375b.chunk.css.map": "/LaunchPedia/static/css/2.8893375b.chunk.css.map",
+    "static/css/main.e8eb0f68.chunk.css.map": "/LaunchPedia/static/css/main.e8eb0f68.chunk.css.map",
+    "static/js/2.3aacf11f.chunk.js.LICENSE.txt": "/LaunchPedia/static/js/2.3aacf11f.chunk.js.LICENSE.txt",
+    "static/media/logo.svg": "/LaunchPedia/static/media/logo.5d5d9eef.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.828780c0.js",
+    "static/css/2.8893375b.chunk.css",
+    "static/js/2.3aacf11f.chunk.js",
+    "static/css/main.e8eb0f68.chunk.css",
+    "static/js/main.d58fbc69.chunk.js"
+  ]
+}
