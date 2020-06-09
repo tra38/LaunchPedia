@@ -150,13 +150,14 @@ class App extends Component {
               updateParentDate={this.updateParentDate}
               launches={this.state.launches}
               updateSearchResults={this.updateSearchResults} />
+            <hr />
+
             { this.searchResultDisplay() }
           </Tab>
           <Tab eventKey={2} title="Favorites">
             <Panel>
               Your favorites are stored here. To add or remove a favorite, simply click on the <Glyphicon glyph="star" /> button.
             </Panel>
-
             { this.favoriteResultDisplay() }
           </Tab>
         </Tabs>
