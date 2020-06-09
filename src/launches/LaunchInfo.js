@@ -21,7 +21,7 @@ class LaunchInfo extends Component {
     var array = []
     if ( agencies == null )
     {
-      return ""
+      return "an unknown agency"
     }
     agencies.forEach((agency) => {
       array.push(agency.name)
