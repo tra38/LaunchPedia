@@ -40,11 +40,3 @@
 .Launch-search {
   float: right;
 }
-
-/* hacky stuff*/
-.fade.in {
-  opacity: 1;
-}
-.panel-collapse.in {
-    display: block !important;
-}
