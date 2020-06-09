@@ -1,6 +1,6 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "3603cbe4cbe519040d3771a8eaa2d6c2",
+    "revision": "a685f1ef6328d71d8c83a4ce3c4c0cc3",
     "url": "/LaunchPedia/index.html"
   },
   {
