@@ -1,18 +1,18 @@
 {
   "files": {
-    "main.css": "/LaunchPedia/static/css/main.e8eb0f68.chunk.css",
-    "main.js": "/LaunchPedia/static/js/main.d58fbc69.chunk.js",
-    "main.js.map": "/LaunchPedia/static/js/main.d58fbc69.chunk.js.map",
+    "main.css": "/LaunchPedia/static/css/main.3051cb97.chunk.css",
+    "main.js": "/LaunchPedia/static/js/main.134e8e3e.chunk.js",
+    "main.js.map": "/LaunchPedia/static/js/main.134e8e3e.chunk.js.map",
     "runtime-main.js": "/LaunchPedia/static/js/runtime-main.828780c0.js",
     "runtime-main.js.map": "/LaunchPedia/static/js/runtime-main.828780c0.js.map",
     "static/css/2.8893375b.chunk.css": "/LaunchPedia/static/css/2.8893375b.chunk.css",
     "static/js/2.3aacf11f.chunk.js": "/LaunchPedia/static/js/2.3aacf11f.chunk.js",
     "static/js/2.3aacf11f.chunk.js.map": "/LaunchPedia/static/js/2.3aacf11f.chunk.js.map",
     "index.html": "/LaunchPedia/index.html",
-    "precache-manifest.01c77e8bc8ad42636b3ad8deb445c820.js": "/LaunchPedia/precache-manifest.01c77e8bc8ad42636b3ad8deb445c820.js",
+    "precache-manifest.72e749e9a4d592b92910c095e9f27c06.js": "/LaunchPedia/precache-manifest.72e749e9a4d592b92910c095e9f27c06.js",
     "service-worker.js": "/LaunchPedia/service-worker.js",
     "static/css/2.8893375b.chunk.css.map": "/LaunchPedia/static/css/2.8893375b.chunk.css.map",
-    "static/css/main.e8eb0f68.chunk.css.map": "/LaunchPedia/static/css/main.e8eb0f68.chunk.css.map",
+    "static/css/main.3051cb97.chunk.css.map": "/LaunchPedia/static/css/main.3051cb97.chunk.css.map",
     "static/js/2.3aacf11f.chunk.js.LICENSE.txt": "/LaunchPedia/static/js/2.3aacf11f.chunk.js.LICENSE.txt",
     "static/media/logo.svg": "/LaunchPedia/static/media/logo.5d5d9eef.svg"
   },
@@ -20,7 +20,7 @@
     "static/js/runtime-main.828780c0.js",
     "static/css/2.8893375b.chunk.css",
     "static/js/2.3aacf11f.chunk.js",
-    "static/css/main.e8eb0f68.chunk.css",
-    "static/js/main.d58fbc69.chunk.js"
+    "static/css/main.3051cb97.chunk.css",
+    "static/js/main.134e8e3e.chunk.js"
   ]
 }
