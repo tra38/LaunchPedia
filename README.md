@@ -1,6 +1,4 @@
-This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). The latest guide to "Create React App" is located [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
-
-The application is already live on Github Pages. You may view the web application [here](https://tra38.github.io/LaunchPedia).
+This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app). The latest guide to "Create React App" is located [here](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md). The application was live on Github Pages, and was hosted on the web application [here](https://tra38.github.io/LaunchPedia). It is currently archived because it needs be updated to the new API, [as this issue notes](https://github.com/tra38/LaunchPedia/issues/3).
 
 ## To Start
 
